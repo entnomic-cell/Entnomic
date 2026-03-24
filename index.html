@@ -276,7 +276,7 @@ body.clicking #cursor-ring { width: 18px; height: 18px; border-color: rgba(255,2
 
 <!-- ENTER OVERLAY -->
 <div id="enter-overlay">
-  <img id="enter-bg" src="background.png" alt="">
+  <div id="enter-bg" style="background-image:url('background.png');background-size:cover;background-position:center;position:absolute;inset:0;filter:brightness(0.35);"></div>
   <div id="enter-vignette"></div>
   <div id="enter-content">
     <div id="enter-pulse">
@@ -294,8 +294,7 @@ body.clicking #cursor-ring { width: 18px; height: 18px; border-color: rgba(255,2
 <div id="cursor-v"></div>
 <div id="cursor-ring"></div>
 
-<div id="bg">
-  <img id="bg-img" src="background.png" alt="">
+<div id="bg" style="background-image:url('background.png');background-size:cover;background-position:center;">
   <div id="bg-overlay"></div>
   <canvas id="bgc"></canvas>
 </div>
@@ -477,7 +476,7 @@ const orbs = [
 let T = 0;
 function drawBg() {
   const W = bgc.width, H = bgc.height;
-  bgx.fillStyle = 'rgba(0,0,0,0.18)';
+  bgx.fillStyle = 'rgba(0,0,0,0.04)';
   bgx.fillRect(0,0,W,H);
   orbs.forEach(o => {
     o.x += Math.sin(T*o.sx*700)*o.sx; o.y += Math.cos(T*o.sy*700)*o.sy;
