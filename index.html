@@ -18,7 +18,6 @@ html, body {
   cursor: none;
 }
 
-/* ── CURSOR ── */
 #cursor-dot {
   position: fixed;
   width: 5px; height: 5px;
@@ -37,22 +36,12 @@ html, body {
   pointer-events: none;
   z-index: 9998;
   transform: translate(-50%, -50%);
-  transition: width .22s cubic-bezier(.22,1,.36,1),
-              height .22s cubic-bezier(.22,1,.36,1),
-              border-color .2s,
-              border-radius .2s;
+  transition: width .22s cubic-bezier(.22,1,.36,1), height .22s cubic-bezier(.22,1,.36,1), border-color .2s;
 }
-body.hovering #cursor-dot   { width: 6px; height: 6px; }
-body.hovering #cursor-outline {
-  width: 48px; height: 48px;
-  border-color: rgba(255,255,255,0.25);
-}
-body.clicking #cursor-outline {
-  width: 22px; height: 22px;
-  border-color: rgba(255,255,255,0.9);
-}
+body.hovering #cursor-dot { width: 6px; height: 6px; }
+body.hovering #cursor-outline { width: 48px; height: 48px; border-color: rgba(255,255,255,0.25); }
+body.clicking #cursor-outline { width: 22px; height: 22px; border-color: rgba(255,255,255,0.9); }
 
-/* ── BG ── */
 #bg { position: fixed; inset: 0; z-index: 0; }
 #bg canvas { width: 100%; height: 100%; display: block; }
 #bg::after {
@@ -61,7 +50,6 @@ body.clicking #cursor-outline {
   pointer-events: none;
 }
 
-/* ── LAYOUT ── */
 #app {
   position: relative; z-index: 2;
   width: 100%; height: 100vh;
@@ -70,7 +58,6 @@ body.clicking #cursor-outline {
   overflow-y: auto;
 }
 
-/* ── CARD ── */
 .card {
   width: 100%; max-width: 340px;
   background: rgba(7,7,7,0.62);
@@ -88,7 +75,6 @@ body.clicking #cursor-outline {
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* ── TOP ── */
 .top {
   display: flex; flex-direction: column; align-items: center;
   padding-bottom: 16px;
@@ -112,14 +98,10 @@ body.clicking #cursor-outline {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.name {
-  font-size: 1.1rem; font-weight: 600; letter-spacing: -.02em;
-  color: #fff; margin-bottom: 4px;
-}
+.name { font-size: 1.1rem; font-weight: 600; letter-spacing: -.02em; color: #fff; margin-bottom: 4px; }
 .handle {
   font-size: .65rem; color: rgba(255,255,255,0.32); font-weight: 400;
-  letter-spacing: .02em; margin-bottom: 10px;
-  line-height: 1.6;
+  letter-spacing: .02em; margin-bottom: 10px; line-height: 1.6;
 }
 .handle span { display: inline-block; }
 .handle span + span::before { content: ' · '; color: rgba(255,255,255,0.15); }
@@ -134,16 +116,14 @@ body.clicking #cursor-outline {
   letter-spacing: .03em; white-space: nowrap;
 }
 
-/* ── BIO ── */
 .bio {
   font-size: .71rem; line-height: 1.72;
-  color: rgba(255,255,255,0.42); font-weight: 400;
+  color: rgba(255,255,255,0.42);
   padding: 14px 0;
   border-bottom: 1px solid rgba(255,255,255,0.07);
   text-align: center;
 }
 
-/* ── SKILLS ── */
 .skills {
   display: flex; flex-wrap: wrap; gap: 5px;
   padding: 13px 0;
@@ -158,18 +138,9 @@ body.clicking #cursor-outline {
   transition: background .15s, border-color .15s, color .15s;
   white-space: nowrap;
 }
-.sk:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.2);
-  color: rgba(255,255,255,0.82);
-}
+.sk:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.82); }
 
-/* ── LINKS ── */
-.links {
-  display: flex; flex-direction: column; gap: 6px;
-  padding: 13px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
-}
+.links { display: flex; flex-direction: column; gap: 6px; padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
 .lnk {
   display: flex; align-items: center; gap: 10px;
   padding: 9px 12px; border-radius: 10px;
@@ -178,11 +149,7 @@ body.clicking #cursor-outline {
   text-decoration: none; color: #fff;
   transition: background .15s, border-color .15s, transform .15s;
 }
-.lnk:hover {
-  background: rgba(255,255,255,0.05);
-  border-color: rgba(255,255,255,0.15);
-  transform: translateX(3px);
-}
+.lnk:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); transform: translateX(3px); }
 .lico {
   width: 26px; height: 26px; border-radius: 7px;
   display: flex; align-items: center; justify-content: center;
@@ -195,7 +162,6 @@ body.clicking #cursor-outline {
 .lsub  { font-size: .59rem; color: rgba(255,255,255,0.28); margin-top: 1px; }
 .larr  { font-size: .65rem; color: rgba(255,255,255,0.22); }
 
-/* ── PLAYER ── */
 .player { padding-top: 13px; display: flex; flex-direction: column; gap: 9px; }
 .prow { display: flex; align-items: center; gap: 10px; }
 .pbtn {
@@ -222,17 +188,8 @@ body.clicking #cursor-outline {
 #vis { width: 100%; height: 32px; border-radius: 6px; display: block; }
 
 .pw { display: flex; align-items: center; gap: 7px; }
-.pb {
-  flex: 1; height: 2px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 99px; cursor: pointer; position: relative;
-}
-.pbf {
-  height: 100%; width: 0%;
-  background: #fff;
-  border-radius: 99px; pointer-events: none;
-  transition: width .25s linear;
-}
+.pb { flex: 1; height: 2px; background: rgba(255,255,255,0.08); border-radius: 99px; cursor: pointer; }
+.pbf { height: 100%; width: 0%; background: #fff; border-radius: 99px; pointer-events: none; }
 .pt { font-size: .57rem; color: rgba(255,255,255,0.22); min-width: 27px; }
 .pt:last-child { text-align: right; }
 </style>
@@ -243,15 +200,21 @@ body.clicking #cursor-outline {
 <div id="cursor-outline"></div>
 <div id="bg"><canvas id="bgc"></canvas></div>
 
+<!-- Hidden YouTube iframe - autoplay audio -->
+<iframe id="yt"
+  src="https://www.youtube.com/embed/TK__uLTZmb8?autoplay=1&loop=1&playlist=TK__uLTZmb8&controls=0&enablejsapi=1&origin=https://entnomic-cell.github.io"
+  style="position:fixed;width:1px;height:1px;opacity:0.01;pointer-events:none;border:none;top:-9999px;"
+  allow="autoplay; encrypted-media"
+  frameborder="0"
+  allowfullscreen></iframe>
+
 <div id="app">
   <div class="card">
 
     <div class="top">
       <div class="av-wrap">
         <div class="av-ring"></div>
-        <img class="av"
-          src="pfp.png"
-          alt="entnomic">
+        <img class="av" src="pfp.png" alt="entnomic">
       </div>
       <div class="name">entnomic</div>
       <div class="handle">
@@ -343,7 +306,7 @@ body.clicking #cursor-outline {
 
     <div class="player">
       <div class="prow">
-        <button class="pbtn" id="pbtn">▶</button>
+        <button class="pbtn" id="pbtn">⏸</button>
         <div class="pi">
           <div class="pn">Strive Extended</div>
           <div class="pa">Alan Larsen</div>
@@ -367,50 +330,36 @@ body.clicking #cursor-outline {
   </div>
 </div>
 
-<audio id="aud" loop src="https://raw.githubusercontent.com/entnomic-cell/Entnomic/refs/heads/main/Alan_Larsen_Strive_Extended.mp3"></audio>
-
 <script>
-// ══════════════════════════════════════
-//  CURSOR
-// ══════════════════════════════════════
-const DOT     = document.getElementById('cursor-dot');
+// CURSOR
+const DOT = document.getElementById('cursor-dot');
 const OUTLINE = document.getElementById('cursor-outline');
 let cx = 0, cy = 0, ox = 0, oy = 0;
-
 document.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; });
 document.addEventListener('mousedown', () => document.body.classList.add('clicking'));
-document.addEventListener('mouseup',   () => document.body.classList.remove('clicking'));
-
+document.addEventListener('mouseup', () => document.body.classList.remove('clicking'));
 document.querySelectorAll('a, button, .sk, .pb').forEach(el => {
   el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
   el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
 });
-
 (function cursorLoop() {
-  ox += (cx - ox) * 0.11;
-  oy += (cy - oy) * 0.11;
-  DOT.style.left     = cx + 'px';
-  DOT.style.top      = cy + 'px';
-  OUTLINE.style.left = ox + 'px';
-  OUTLINE.style.top  = oy + 'px';
+  ox += (cx - ox) * 0.11; oy += (cy - oy) * 0.11;
+  DOT.style.left = cx + 'px'; DOT.style.top = cy + 'px';
+  OUTLINE.style.left = ox + 'px'; OUTLINE.style.top = oy + 'px';
   requestAnimationFrame(cursorLoop);
 })();
 
-// ══════════════════════════════════════
-//  BACKGROUND — dense monochrome particles
-// ══════════════════════════════════════
+// BACKGROUND
 const bgc = document.getElementById('bgc');
 const bgx = bgc.getContext('2d');
-
 function resizeBg() { bgc.width = innerWidth; bgc.height = innerHeight; }
 resizeBg();
 window.addEventListener('resize', resizeBg);
 
-// Two types: drifting attractor particles + scattered floaters
 const ATTRACTOR_N = 280;
-const FLOATER_N   = 120;
+const FLOATER_N = 120;
 
-const attractors = Array.from({ length: ATTRACTOR_N }, (_, i) => ({
+const attractors = Array.from({ length: ATTRACTOR_N }, () => ({
   x: Math.random(), y: Math.random(),
   vx: (Math.random() - .5) * .0009, vy: (Math.random() - .5) * .0009,
   phase: Math.random() * Math.PI * 2,
@@ -432,62 +381,46 @@ const floaters = Array.from({ length: FLOATER_N }, () => ({
   flickerSpeed: .015 + Math.random() * .03,
 }));
 
-// Two dim orbs
 const orbs = [
-  { x: .2,  y: .3,  r: .5, sx: .00007, sy: .00005 },
-  { x: .8,  y: .65, r: .42, sx: -.00006, sy: .00008 },
+  { x: .2, y: .3, r: .5, sx: .00007, sy: .00005 },
+  { x: .8, y: .65, r: .42, sx: -.00006, sy: .00008 },
 ];
 
 let T = 0;
-
 function drawBg() {
   const W = bgc.width, H = bgc.height;
-
   bgx.fillStyle = 'rgba(0,0,0,0.18)';
   bgx.fillRect(0, 0, W, H);
-
-  // orbs
   orbs.forEach(o => {
     o.x += Math.sin(T * o.sx * 700) * o.sx;
     o.y += Math.cos(T * o.sy * 700) * o.sy;
-    o.x = ((o.x % 1) + 1) % 1;
-    o.y = ((o.y % 1) + 1) % 1;
+    o.x = ((o.x % 1) + 1) % 1; o.y = ((o.y % 1) + 1) % 1;
     const g = bgx.createRadialGradient(o.x*W, o.y*H, 0, o.x*W, o.y*H, o.r * Math.min(W, H));
-    g.addColorStop(0,   'rgba(255,255,255,0.05)');
-    g.addColorStop(.5,  'rgba(255,255,255,0.015)');
-    g.addColorStop(1,   'rgba(255,255,255,0)');
-    bgx.fillStyle = g;
-    bgx.fillRect(0, 0, W, H);
+    g.addColorStop(0, 'rgba(255,255,255,0.05)');
+    g.addColorStop(.5, 'rgba(255,255,255,0.015)');
+    g.addColorStop(1, 'rgba(255,255,255,0)');
+    bgx.fillStyle = g; bgx.fillRect(0, 0, W, H);
   });
-
-  // attractor particles with trails
   attractors.forEach(p => {
     const tx = .5 + Math.sin(T * p.speed + p.phase) * .44;
     const ty = .5 + Math.cos(T * p.speed * 1.3 + p.phase) * .34;
-    p.vx += (tx - p.x) * .000013;
-    p.vy += (ty - p.y) * .000013;
+    p.vx += (tx - p.x) * .000013; p.vy += (ty - p.y) * .000013;
     p.vx *= .986; p.vy *= .986;
     p.x += p.vx; p.y += p.vy;
-
     p.trail.push({ x: p.x * W, y: p.y * H });
     if (p.trail.length > p.trailLen) p.trail.shift();
-
     if (p.trail.length > 2) {
       bgx.beginPath();
       bgx.moveTo(p.trail[0].x, p.trail[0].y);
       for (let i = 1; i < p.trail.length; i++) bgx.lineTo(p.trail[i].x, p.trail[i].y);
-      bgx.strokeStyle = `rgba(255,255,255,${p.alpha * .45})`;
-      bgx.lineWidth = p.sz * .7;
-      bgx.stroke();
+      bgx.strokeStyle = 'rgba(255,255,255,' + (p.alpha * .45) + ')';
+      bgx.lineWidth = p.sz * .7; bgx.stroke();
     }
-
     bgx.beginPath();
     bgx.arc(p.x * W, p.y * H, p.sz + .2, 0, Math.PI * 2);
-    bgx.fillStyle = `rgba(255,255,255,${p.alpha})`;
+    bgx.fillStyle = 'rgba(255,255,255,' + p.alpha + ')';
     bgx.fill();
   });
-
-  // floaters — slow upward drift
   floaters.forEach(f => {
     f.x += f.vx; f.y += f.vy;
     f.flicker += f.flickerSpeed;
@@ -495,134 +428,111 @@ function drawBg() {
     if (f.y < -4) { f.y = H + 4; f.x = Math.random() * W; }
     bgx.beginPath();
     bgx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-    bgx.fillStyle = `rgba(255,255,255,${a})`;
+    bgx.fillStyle = 'rgba(255,255,255,' + a + ')';
     bgx.fill();
   });
-
   T += 16;
   requestAnimationFrame(drawBg);
 }
 drawBg();
 
-// ══════════════════════════════════════
-//  AUDIO — autoplay with unlock fallback
-// ══════════════════════════════════════
-const aud   = document.getElementById('aud');
-const pbtn  = document.getElementById('pbtn');
-const vmb   = document.getElementById('vmb');
-const pbf   = document.getElementById('pbf');
-const pbar  = document.getElementById('pb');
-const ctEl  = document.getElementById('ct');
-const ttEl  = document.getElementById('tt');
-const vis   = document.getElementById('vis');
-const vx    = vis.getContext('2d');
+// YOUTUBE PLAYER via API
+var ytReady = false;
+var ytPlayer = null;
+var playing = true;
 
-aud.volume = .75;
+window.onYouTubeIframeAPIReady = function() {
+  ytPlayer = new YT.Player('yt', {
+    events: {
+      onReady: function(e) {
+        ytReady = true;
+        e.target.setVolume(75);
+        e.target.playVideo();
+      }
+    }
+  });
+};
 
-let actx, analyser, src, fdata, playing = false, aReady = false;
+// Load YouTube IFrame API
+var tag = document.createElement('script');
+tag.src = 'https://www.youtube.com/iframe_api';
+document.head.appendChild(tag);
 
-function initAudio() {
-  if (aReady) return;
-  aReady = true;
-  actx    = new (window.AudioContext || window.webkitAudioContext)();
-  analyser = actx.createAnalyser();
-  analyser.fftSize = 512;
-  fdata   = new Uint8Array(analyser.frequencyBinCount);
-  src     = actx.createMediaElementSource(aud);
-  src.connect(analyser);
-  analyser.connect(actx.destination);
+// Play/pause button
+var pbtn = document.getElementById('pbtn');
+pbtn.addEventListener('click', function() {
+  if (!ytPlayer) return;
+  if (playing) {
+    ytPlayer.pauseVideo();
+    pbtn.innerHTML = '&#9654;';
+    playing = false;
+  } else {
+    ytPlayer.playVideo();
+    pbtn.innerHTML = '&#9208;';
+    playing = true;
+  }
+});
+
+// Mute button
+var vmb = document.getElementById('vmb');
+var muted = false;
+var VOL_ON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>';
+var VOL_OFF = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>';
+vmb.addEventListener('click', function() {
+  if (!ytPlayer) return;
+  muted = !muted;
+  muted ? ytPlayer.mute() : ytPlayer.unMute();
+  vmb.innerHTML = muted ? VOL_OFF : VOL_ON;
+});
+
+// Progress bar — poll YouTube player
+var ctEl = document.getElementById('ct');
+var ttEl = document.getElementById('tt');
+var pbf = document.getElementById('pbf');
+var pbar = document.getElementById('pb');
+
+function fmt(s) {
+  s = Math.floor(s || 0);
+  return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
 }
 
-async function startPlayback() {
-  initAudio();
-  if (actx.state === 'suspended') await actx.resume();
-  aud.play().catch(() => {});
-  pbtn.innerHTML = '⏸';
-  playing = true;
-}
+setInterval(function() {
+  if (!ytPlayer || !ytPlayer.getDuration) return;
+  var dur = ytPlayer.getDuration();
+  var cur = ytPlayer.getCurrentTime();
+  if (dur) {
+    pbf.style.width = (cur / dur * 100) + '%';
+    ctEl.textContent = fmt(cur);
+    ttEl.textContent = fmt(dur);
+  }
+}, 500);
 
-// Try autoplay immediately
-aud.play().then(() => {
-  initAudio();
-  pbtn.innerHTML = '⏸';
-  playing = true;
-}).catch(() => {
-  // Browser blocked — unlock on first interaction
-  const unlock = () => {
-    startPlayback();
-    document.removeEventListener('click', unlock);
-    document.removeEventListener('keydown', unlock);
-  };
-  document.addEventListener('click', unlock);
-  document.addEventListener('keydown', unlock);
+pbar.addEventListener('click', function(e) {
+  if (!ytPlayer || !ytPlayer.getDuration) return;
+  var r = pbar.getBoundingClientRect();
+  ytPlayer.seekTo(((e.clientX - r.left) / r.width) * ytPlayer.getDuration(), true);
 });
 
-// Play/pause toggle
-pbtn.addEventListener('click', async e => {
-  e.stopPropagation();
-  if (!aReady) { await startPlayback(); return; }
-  if (actx.state === 'suspended') await actx.resume();
-  if (playing) { aud.pause(); pbtn.innerHTML = '▶'; playing = false; }
-  else         { aud.play(); pbtn.innerHTML = '⏸'; playing = true; }
-});
-
-// Mute
-const VOL_ON  = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
-const VOL_OFF = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
-
-vmb.addEventListener('click', () => {
-  aud.muted = !aud.muted;
-  vmb.innerHTML = aud.muted ? VOL_OFF : VOL_ON;
-});
-
-// Progress
-const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
-aud.addEventListener('timeupdate', () => {
-  if (!aud.duration) return;
-  pbf.style.width = (aud.currentTime / aud.duration * 100) + '%';
-  ctEl.textContent = fmt(aud.currentTime);
-});
-aud.addEventListener('loadedmetadata', () => { ttEl.textContent = fmt(aud.duration); });
-pbar.addEventListener('click', e => {
-  if (!aud.duration) return;
-  const r = pbar.getBoundingClientRect();
-  aud.currentTime = ((e.clientX - r.left) / r.width) * aud.duration;
-});
-
-// ══════════════════════════════════════
-//  VISUALIZER
-// ══════════════════════════════════════
-function rsv() {
-  const r = vis.parentElement.getBoundingClientRect();
-  vis.width = r.width; vis.height = 32;
-}
+// VISUALIZER — ambient since we can't tap YT audio
+var vis = document.getElementById('vis');
+var vx = vis.getContext('2d');
+function rsv() { var r = vis.parentElement.getBoundingClientRect(); vis.width = r.width; vis.height = 32; }
 rsv();
 window.addEventListener('resize', rsv);
 
 function drawVis() {
   requestAnimationFrame(drawVis);
-  const W = vis.width, H = vis.height;
+  var W = vis.width, H = vis.height;
   vx.clearRect(0, 0, W, H);
-
-  if (!analyser || !playing) {
-    const a = .18 + .1 * Math.sin(Date.now() * .002);
-    vx.beginPath();
-    for (let i = 0; i <= W; i++) {
-      const y = H / 2 + Math.sin(i * .04 + Date.now() * .003) * 3;
-      i === 0 ? vx.moveTo(i, y) : vx.lineTo(i, y);
-    }
-    vx.strokeStyle = `rgba(255,255,255,${a})`;
-    vx.lineWidth = 1;
-    vx.stroke();
-    return;
-  }
-
-  analyser.getByteFrequencyData(fdata);
-  const bars = 70, bw = W / bars - .6;
-  for (let i = 0; i < bars; i++) {
-    const v = fdata[Math.floor(i / bars * fdata.length)] / 255;
-    const bh = Math.max(1, v * H * .92);
-    vx.fillStyle = `rgba(255,255,255,${.22 + v * .68})`;
+  var t = Date.now();
+  var bars = 70;
+  var bw = W / bars - .6;
+  for (var i = 0; i < bars; i++) {
+    var v = (Math.sin(t * .0015 + i * .4) * .5 + .5)
+           * (Math.sin(t * .0008 + i * .15) * .4 + .6)
+           * (playing ? 1 : .15);
+    var bh = Math.max(1, v * H * .88);
+    vx.fillStyle = 'rgba(255,255,255,' + (.15 + v * .55) + ')';
     vx.beginPath();
     vx.roundRect(i * (bw + .6), H - bh, bw, bh, [1.5, 1.5, 0, 0]);
     vx.fill();
