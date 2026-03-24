@@ -13,7 +13,7 @@ html, body {
   width: 100%; height: 100%;
   overflow: hidden;
   font-family: 'Inter', sans-serif;
-  background: #000 url('./background.png') center/cover no-repeat fixed;
+  background: #000;
   color: #fff;
   cursor: none;
 }
@@ -53,9 +53,24 @@ body.hovering #cursor-ring { width: 42px; height: 42px; border-color: rgba(255,2
 body.clicking #cursor-dot { transform: translate(-50%, -50%) scale(2.5); }
 body.clicking #cursor-ring { width: 18px; height: 18px; border-color: rgba(255,255,255,0.9); }
 
+/* ── BACKGROUND IMAGE ── */
+#bg-image {
+  position: fixed; inset: -10%; z-index: 0;
+  width: 120%; height: 120%;
+  background: url('./background.png') center/cover no-repeat;
+  opacity: 0.2;
+  animation: breathe 18s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes breathe {
+  0%   { transform: scale(1);    }
+  50%  { transform: scale(1.08); }
+  100% { transform: scale(1);    }
+}
+
 /* ── BACKGROUND ── */
 #bg {
-  position: fixed; inset: 0; z-index: 0; overflow: hidden;
+  position: fixed; inset: 0; z-index: 1; overflow: hidden;
   background: transparent;
 }
 #bg-img {
@@ -296,6 +311,7 @@ body.clicking #cursor-ring { width: 18px; height: 18px; border-color: rgba(255,2
 <div id="cursor-v"></div>
 <div id="cursor-ring"></div>
 
+<div id="bg-image"></div>
 <div id="bg">
   <div id="bg-overlay"></div>
   <canvas id="bgc"></canvas>
@@ -478,13 +494,14 @@ const orbs = [
 let T = 0;
 function drawBg() {
   const W = bgc.width, H = bgc.height;
-  bgx.clearRect(0,0,W,H);
+  bgx.fillStyle = 'rgba(0,0,0,0.18)';
+  bgx.fillRect(0,0,W,H);
   orbs.forEach(o => {
     o.x += Math.sin(T*o.sx*700)*o.sx; o.y += Math.cos(T*o.sy*700)*o.sy;
     o.x = ((o.x%1)+1)%1; o.y = ((o.y%1)+1)%1;
     const g = bgx.createRadialGradient(o.x*W,o.y*H,0,o.x*W,o.y*H,o.r*Math.min(W,H));
-    g.addColorStop(0,'rgba(255,255,255,0.02)');
-    g.addColorStop(.5,'rgba(255,255,255,0.006)');
+    g.addColorStop(0,'rgba(255,255,255,0.05)');
+    g.addColorStop(.5,'rgba(255,255,255,0.015)');
     g.addColorStop(1,'rgba(255,255,255,0)');
     bgx.fillStyle=g; bgx.fillRect(0,0,W,H);
   });
