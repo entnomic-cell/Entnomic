@@ -20,27 +20,48 @@ html, body {
 
 #cursor-dot {
   position: fixed;
-  width: 5px; height: 5px;
+  width: 4px; height: 4px;
   background: #fff;
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
   transform: translate(-50%, -50%);
-  transition: width .12s, height .12s;
+  transition: transform .08s, opacity .15s;
+  mix-blend-mode: difference;
 }
-#cursor-outline {
+#cursor-h {
   position: fixed;
-  width: 32px; height: 32px;
-  border: 1.5px solid rgba(255,255,255,0.6);
-  border-radius: 50%;
+  width: 18px; height: 1px;
+  background: rgba(255,255,255,0.75);
   pointer-events: none;
   z-index: 9998;
   transform: translate(-50%, -50%);
-  transition: width .22s cubic-bezier(.22,1,.36,1), height .22s cubic-bezier(.22,1,.36,1), border-color .2s;
+  transition: width .18s cubic-bezier(.22,1,.36,1);
 }
-body.hovering #cursor-dot { width: 6px; height: 6px; }
-body.hovering #cursor-outline { width: 48px; height: 48px; border-color: rgba(255,255,255,0.25); }
-body.clicking #cursor-outline { width: 22px; height: 22px; border-color: rgba(255,255,255,0.9); }
+#cursor-v {
+  position: fixed;
+  width: 1px; height: 18px;
+  background: rgba(255,255,255,0.75);
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: height .18s cubic-bezier(.22,1,.36,1);
+}
+#cursor-ring {
+  position: fixed;
+  width: 28px; height: 28px;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9997;
+  transform: translate(-50%, -50%);
+  transition: width .22s cubic-bezier(.22,1,.36,1), height .22s cubic-bezier(.22,1,.36,1), border-color .2s, border-radius .2s;
+}
+body.hovering #cursor-h { width: 0px; }
+body.hovering #cursor-v { height: 0px; }
+body.hovering #cursor-ring { width: 42px; height: 42px; border-color: rgba(255,255,255,0.55); border-radius: 4px; }
+body.clicking #cursor-dot { transform: translate(-50%, -50%) scale(2.5); }
+body.clicking #cursor-ring { width: 18px; height: 18px; border-color: rgba(255,255,255,0.9); }
 
 #bg { position: fixed; inset: 0; z-index: 0; }
 #bg canvas { width: 100%; height: 100%; display: block; }
@@ -197,7 +218,9 @@ body.clicking #cursor-outline { width: 22px; height: 22px; border-color: rgba(25
 <body>
 
 <div id="cursor-dot"></div>
-<div id="cursor-outline"></div>
+<div id="cursor-h"></div>
+<div id="cursor-v"></div>
+<div id="cursor-ring"></div>
 <div id="bg"><canvas id="bgc"></canvas></div>
 
 <!-- YouTube player target (API will populate this div) -->
@@ -328,8 +351,10 @@ body.clicking #cursor-outline { width: 22px; height: 22px; border-color: rgba(25
 <script>
 // CURSOR
 const DOT = document.getElementById('cursor-dot');
-const OUTLINE = document.getElementById('cursor-outline');
-let cx = 0, cy = 0, ox = 0, oy = 0;
+const CH = document.getElementById('cursor-h');
+const CV = document.getElementById('cursor-v');
+const RING = document.getElementById('cursor-ring');
+let cx = 0, cy = 0, rx = 0, ry = 0;
 document.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; });
 document.addEventListener('mousedown', () => document.body.classList.add('clicking'));
 document.addEventListener('mouseup', () => document.body.classList.remove('clicking'));
@@ -338,9 +363,11 @@ document.querySelectorAll('a, button, .sk, .pb').forEach(el => {
   el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
 });
 (function cursorLoop() {
-  ox += (cx - ox) * 0.11; oy += (cy - oy) * 0.11;
+  rx += (cx - rx) * 0.10; ry += (cy - ry) * 0.10;
   DOT.style.left = cx + 'px'; DOT.style.top = cy + 'px';
-  OUTLINE.style.left = ox + 'px'; OUTLINE.style.top = oy + 'px';
+  CH.style.left = cx + 'px'; CH.style.top = cy + 'px';
+  CV.style.left = cx + 'px'; CV.style.top = cy + 'px';
+  RING.style.left = rx + 'px'; RING.style.top = ry + 'px';
   requestAnimationFrame(cursorLoop);
 })();
 
@@ -458,13 +485,20 @@ window.onYouTubeIframeAPIReady = function() {
       loop: 1,
       playlist: 'TK__uLTZmb8',
       controls: 0,
-      enablejsapi: 1
+      enablejsapi: 1,
+      mute: 1
     },
     events: {
       onReady: function(e) {
         ytReady = true;
-        try { e.target.playVideo(); } catch(err) {}
-        tryPlay();
+        e.target.mute();
+        e.target.playVideo();
+        // Unmute + set volume after a short delay (autoplay policy workaround)
+        setTimeout(function() {
+          e.target.unMute();
+          e.target.setVolume(75);
+          unlocked = true;
+        }, 800);
       },
       onStateChange: function(e) {
         if (e.data === YT.PlayerState.ENDED) {
