@@ -19,41 +19,31 @@ html, body {
 }
 
 #cursor-dot {
-  position: fixed;
-  width: 4px; height: 4px;
-  background: #fff;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
+  position: fixed; width: 4px; height: 4px;
+  background: #fff; border-radius: 50%;
+  pointer-events: none; z-index: 9999;
   transform: translate(-50%, -50%);
   transition: transform .08s, opacity .15s;
   mix-blend-mode: difference;
 }
 #cursor-h {
-  position: fixed;
-  width: 18px; height: 1px;
+  position: fixed; width: 18px; height: 1px;
   background: rgba(255,255,255,0.75);
-  pointer-events: none;
-  z-index: 9998;
+  pointer-events: none; z-index: 9998;
   transform: translate(-50%, -50%);
   transition: width .18s cubic-bezier(.22,1,.36,1);
 }
 #cursor-v {
-  position: fixed;
-  width: 1px; height: 18px;
+  position: fixed; width: 1px; height: 18px;
   background: rgba(255,255,255,0.75);
-  pointer-events: none;
-  z-index: 9998;
+  pointer-events: none; z-index: 9998;
   transform: translate(-50%, -50%);
   transition: height .18s cubic-bezier(.22,1,.36,1);
 }
 #cursor-ring {
-  position: fixed;
-  width: 28px; height: 28px;
-  border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9997;
+  position: fixed; width: 28px; height: 28px;
+  border: 1px solid rgba(255,255,255,0.3); border-radius: 50%;
+  pointer-events: none; z-index: 9997;
   transform: translate(-50%, -50%);
   transition: width .22s cubic-bezier(.22,1,.36,1), height .22s cubic-bezier(.22,1,.36,1), border-color .2s, border-radius .2s;
 }
@@ -63,20 +53,91 @@ body.hovering #cursor-ring { width: 42px; height: 42px; border-color: rgba(255,2
 body.clicking #cursor-dot { transform: translate(-50%, -50%) scale(2.5); }
 body.clicking #cursor-ring { width: 18px; height: 18px; border-color: rgba(255,255,255,0.9); }
 
-#bg { position: fixed; inset: 0; z-index: 0; }
-#bg canvas { width: 100%; height: 100%; display: block; }
-#bg::after {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 50% 50%, transparent 10%, rgba(0,0,0,0.78) 100%);
+/* ── BACKGROUND ── */
+#bg {
+  position: fixed; inset: 0; z-index: 0; overflow: hidden;
+}
+#bg-img {
+  position: absolute; inset: -10%;
+  width: 120%; height: 120%;
+  background: url('https://wallpaperaccess.com/full/220730.jpg') center/cover no-repeat;
+  animation: breathe 18s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes breathe {
+  0%   { transform: scale(1);    }
+  50%  { transform: scale(1.08); }
+  100% { transform: scale(1);    }
+}
+#bg-overlay {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.82) 100%);
   pointer-events: none;
 }
+#bg canvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; display: block;
+  z-index: 1;
+}
 
+/* ── ENTER OVERLAY ── */
+#enter-overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.7s ease;
+}
+#enter-overlay.hidden { opacity: 0; pointer-events: none; }
+
+#enter-bg {
+  position: absolute; inset: -10%;
+  width: 120%; height: 120%;
+  background: url('https://wallpaperaccess.com/full/220730.jpg') center/cover no-repeat;
+  animation: breathe 18s ease-in-out infinite;
+  filter: brightness(0.35);
+}
+#enter-vignette {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.75) 100%);
+}
+#enter-content {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; align-items: center; gap: 20px;
+}
+#enter-pulse {
+  width: 72px; height: 72px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.35);
+  display: flex; align-items: center; justify-content: center;
+  animation: pulse-ring 2.4s ease infinite;
+  backdrop-filter: blur(4px);
+  background: rgba(255,255,255,0.04);
+}
+#enter-pulse svg { opacity: 0.8; }
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0   rgba(255,255,255,0.18); }
+  70%  { box-shadow: 0 0 0 20px rgba(255,255,255,0); }
+  100% { box-shadow: 0 0 0 0   rgba(255,255,255,0); }
+}
+#enter-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.68rem; font-weight: 400;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+}
+#enter-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.58rem; font-weight: 300;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.25);
+  margin-top: -10px;
+}
+
+/* ── APP ── */
 #app {
   position: relative; z-index: 2;
   width: 100%; height: 100vh;
   display: flex; align-items: center; justify-content: center;
-  padding: 20px;
-  overflow-y: auto;
+  padding: 20px; overflow-y: auto;
 }
 
 .card {
@@ -205,71 +266,43 @@ body.clicking #cursor-ring { width: 18px; height: 18px; border-color: rgba(255,2
   transition: color .15s;
 }
 .vmb:hover { color: rgba(255,255,255,0.7); }
-
 #vis { width: 100%; height: 32px; border-radius: 6px; display: block; }
-
 .pw { display: flex; align-items: center; gap: 7px; }
 .pb { flex: 1; height: 2px; background: rgba(255,255,255,0.08); border-radius: 99px; cursor: pointer; }
 .pbf { height: 100%; width: 0%; background: #fff; border-radius: 99px; pointer-events: none; }
 .pt { font-size: .57rem; color: rgba(255,255,255,0.22); min-width: 27px; }
 .pt:last-child { text-align: right; }
-
-#enter-overlay {
-  position: fixed; inset: 0; z-index: 9999;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(0,0,0,0.85);
-  backdrop-filter: blur(8px);
-  cursor: pointer;
-  transition: opacity 0.5s ease;
-}
-#enter-overlay.hidden { opacity: 0; pointer-events: none; }
-#enter-btn {
-  display: flex; flex-direction: column; align-items: center; gap: 12px;
-  color: rgba(255,255,255,0.85);
-  font-family: 'Inter', sans-serif;
-  font-size: 0.75rem; font-weight: 400;
-  letter-spacing: 0.15em; text-transform: uppercase;
-}
-#enter-btn svg { opacity: 0.6; }
-#enter-pulse {
-  width: 64px; height: 64px; border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.3);
-  display: flex; align-items: center; justify-content: center;
-  animation: pulse-ring 2s ease infinite;
-}
-@keyframes pulse-ring {
-  0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.15); }
-  70% { box-shadow: 0 0 0 16px rgba(255,255,255,0); }
-  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
-}
 </style>
 </head>
 <body>
 
-
+<!-- ENTER OVERLAY -->
 <div id="enter-overlay">
-  <div id="enter-btn">
+  <div id="enter-bg"></div>
+  <div id="enter-vignette"></div>
+  <div id="enter-content">
     <div id="enter-pulse">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
         <polygon points="5 3 19 12 5 21 5 3"/>
       </svg>
     </div>
-    <span>click to enter</span>
+    <div id="enter-label">click to enter</div>
+    <div id="enter-sub">entnomic.github.io</div>
   </div>
 </div>
+
 <div id="cursor-dot"></div>
 <div id="cursor-h"></div>
 <div id="cursor-v"></div>
 <div id="cursor-ring"></div>
+
 <div id="bg">
-  <video id="bgvid" src="https://r2.guns.lol/0aabada6-664e-4398-840f-bc030d8b90e1.mp4"
-    autoplay loop muted playsinline disablepictureinpicture preload="auto"
-    style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.45;pointer-events:none;">
-  </video>
-  <canvas id="bgc" style="position:relative;z-index:1;"></canvas>
+  <div id="bg-img"></div>
+  <div id="bg-overlay"></div>
+  <canvas id="bgc"></canvas>
 </div>
 
-<audio id="audioPlayer" src="https://r2.guns.lol/5319fb67-26ea-4844-a9bb-a610f25f6aaa.mp3" loop preload="auto" style="display:none;"></audio>
+<audio id="audioPlayer" src="https://r2.guns.lol/5319fb67-26ea-4844-a9bb-a610f25f6aaa.mp3" loop preload="auto"></audio>
 
 <div id="app">
   <div class="card">
@@ -369,13 +402,13 @@ body.clicking #cursor-ring { width: 18px; height: 18px; border-color: rgba(255,2
 
     <div class="player">
       <div class="prow">
-        <button class="pbtn" id="pbtn">⏸</button>
+        <button class="pbtn" id="pbtn">&#9654;</button>
         <div class="pi">
           <div class="pn">Strive Extended</div>
           <div class="pa">Alan Larsen</div>
         </div>
         <button class="vmb" id="vmb">
-          <svg id="vol-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
             <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
             <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
@@ -394,206 +427,183 @@ body.clicking #cursor-ring { width: 18px; height: 18px; border-color: rgba(255,2
 </div>
 
 <script>
-// CURSOR
-const DOT = document.getElementById('cursor-dot');
-const CH = document.getElementById('cursor-h');
-const CV = document.getElementById('cursor-v');
+// ── CURSOR ──
+const DOT  = document.getElementById('cursor-dot');
+const CH   = document.getElementById('cursor-h');
+const CV   = document.getElementById('cursor-v');
 const RING = document.getElementById('cursor-ring');
 let cx = 0, cy = 0, rx = 0, ry = 0;
 document.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; });
 document.addEventListener('mousedown', () => document.body.classList.add('clicking'));
-document.addEventListener('mouseup', () => document.body.classList.remove('clicking'));
+document.addEventListener('mouseup',   () => document.body.classList.remove('clicking'));
 document.querySelectorAll('a, button, .sk, .pb').forEach(el => {
   el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
   el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
 });
 (function cursorLoop() {
   rx += (cx - rx) * 0.10; ry += (cy - ry) * 0.10;
-  DOT.style.left = cx + 'px'; DOT.style.top = cy + 'px';
-  CH.style.left = cx + 'px'; CH.style.top = cy + 'px';
-  CV.style.left = cx + 'px'; CV.style.top = cy + 'px';
+  DOT.style.left  = cx + 'px'; DOT.style.top  = cy + 'px';
+  CH.style.left   = cx + 'px'; CH.style.top   = cy + 'px';
+  CV.style.left   = cx + 'px'; CV.style.top   = cy + 'px';
   RING.style.left = rx + 'px'; RING.style.top = ry + 'px';
   requestAnimationFrame(cursorLoop);
 })();
 
-// BACKGROUND
+// ── BACKGROUND PARTICLES ──
 const bgc = document.getElementById('bgc');
 const bgx = bgc.getContext('2d');
 function resizeBg() { bgc.width = innerWidth; bgc.height = innerHeight; }
 resizeBg();
 window.addEventListener('resize', resizeBg);
 
-const ATTRACTOR_N = 280;
-const FLOATER_N = 120;
-
-const attractors = Array.from({ length: ATTRACTOR_N }, () => ({
+const attractors = Array.from({ length: 280 }, () => ({
   x: Math.random(), y: Math.random(),
-  vx: (Math.random() - .5) * .0009, vy: (Math.random() - .5) * .0009,
-  phase: Math.random() * Math.PI * 2,
-  speed: .00015 + Math.random() * .0004,
-  alpha: .08 + Math.random() * .28,
-  sz: .25 + Math.random() * 1.2,
-  trail: [],
-  trailLen: 10 + Math.floor(Math.random() * 14),
+  vx: (Math.random()-.5)*.0009, vy: (Math.random()-.5)*.0009,
+  phase: Math.random()*Math.PI*2,
+  speed: .00015 + Math.random()*.0004,
+  alpha: .08 + Math.random()*.28,
+  sz: .25 + Math.random()*1.2,
+  trail: [], trailLen: 10 + Math.floor(Math.random()*14),
 }));
-
-const floaters = Array.from({ length: FLOATER_N }, () => ({
-  x: Math.random() * innerWidth,
-  y: Math.random() * innerHeight,
-  r: .4 + Math.random() * 1.1,
-  vy: -.015 - Math.random() * .04,
-  vx: (Math.random() - .5) * .012,
-  alpha: .04 + Math.random() * .14,
-  flicker: Math.random() * Math.PI * 2,
-  flickerSpeed: .015 + Math.random() * .03,
+const floaters = Array.from({ length: 120 }, () => ({
+  x: Math.random()*innerWidth, y: Math.random()*innerHeight,
+  r: .4+Math.random()*1.1,
+  vy: -.015-Math.random()*.04, vx: (Math.random()-.5)*.012,
+  alpha: .04+Math.random()*.14,
+  flicker: Math.random()*Math.PI*2, flickerSpeed: .015+Math.random()*.03,
 }));
-
 const orbs = [
-  { x: .2, y: .3, r: .5, sx: .00007, sy: .00005 },
-  { x: .8, y: .65, r: .42, sx: -.00006, sy: .00008 },
+  {x:.2,y:.3,r:.5,sx:.00007,sy:.00005},
+  {x:.8,y:.65,r:.42,sx:-.00006,sy:.00008},
 ];
-
 let T = 0;
 function drawBg() {
   const W = bgc.width, H = bgc.height;
   bgx.fillStyle = 'rgba(0,0,0,0.18)';
-  bgx.fillRect(0, 0, W, H);
+  bgx.fillRect(0,0,W,H);
   orbs.forEach(o => {
-    o.x += Math.sin(T * o.sx * 700) * o.sx;
-    o.y += Math.cos(T * o.sy * 700) * o.sy;
-    o.x = ((o.x % 1) + 1) % 1; o.y = ((o.y % 1) + 1) % 1;
-    const g = bgx.createRadialGradient(o.x*W, o.y*H, 0, o.x*W, o.y*H, o.r * Math.min(W, H));
-    g.addColorStop(0, 'rgba(255,255,255,0.05)');
-    g.addColorStop(.5, 'rgba(255,255,255,0.015)');
-    g.addColorStop(1, 'rgba(255,255,255,0)');
-    bgx.fillStyle = g; bgx.fillRect(0, 0, W, H);
+    o.x += Math.sin(T*o.sx*700)*o.sx; o.y += Math.cos(T*o.sy*700)*o.sy;
+    o.x = ((o.x%1)+1)%1; o.y = ((o.y%1)+1)%1;
+    const g = bgx.createRadialGradient(o.x*W,o.y*H,0,o.x*W,o.y*H,o.r*Math.min(W,H));
+    g.addColorStop(0,'rgba(255,255,255,0.05)');
+    g.addColorStop(.5,'rgba(255,255,255,0.015)');
+    g.addColorStop(1,'rgba(255,255,255,0)');
+    bgx.fillStyle=g; bgx.fillRect(0,0,W,H);
   });
   attractors.forEach(p => {
-    const tx = .5 + Math.sin(T * p.speed + p.phase) * .44;
-    const ty = .5 + Math.cos(T * p.speed * 1.3 + p.phase) * .34;
-    p.vx += (tx - p.x) * .000013; p.vy += (ty - p.y) * .000013;
-    p.vx *= .986; p.vy *= .986;
-    p.x += p.vx; p.y += p.vy;
-    p.trail.push({ x: p.x * W, y: p.y * H });
-    if (p.trail.length > p.trailLen) p.trail.shift();
-    if (p.trail.length > 2) {
+    const tx=.5+Math.sin(T*p.speed+p.phase)*.44;
+    const ty=.5+Math.cos(T*p.speed*1.3+p.phase)*.34;
+    p.vx+=(tx-p.x)*.000013; p.vy+=(ty-p.y)*.000013;
+    p.vx*=.986; p.vy*=.986;
+    p.x+=p.vx; p.y+=p.vy;
+    p.trail.push({x:p.x*W,y:p.y*H});
+    if(p.trail.length>p.trailLen) p.trail.shift();
+    if(p.trail.length>2){
       bgx.beginPath();
-      bgx.moveTo(p.trail[0].x, p.trail[0].y);
-      for (let i = 1; i < p.trail.length; i++) bgx.lineTo(p.trail[i].x, p.trail[i].y);
-      bgx.strokeStyle = 'rgba(255,255,255,' + (p.alpha * .45) + ')';
-      bgx.lineWidth = p.sz * .7; bgx.stroke();
+      bgx.moveTo(p.trail[0].x,p.trail[0].y);
+      for(let i=1;i<p.trail.length;i++) bgx.lineTo(p.trail[i].x,p.trail[i].y);
+      bgx.strokeStyle='rgba(255,255,255,'+(p.alpha*.45)+')';
+      bgx.lineWidth=p.sz*.7; bgx.stroke();
     }
     bgx.beginPath();
-    bgx.arc(p.x * W, p.y * H, p.sz + .2, 0, Math.PI * 2);
-    bgx.fillStyle = 'rgba(255,255,255,' + p.alpha + ')';
+    bgx.arc(p.x*W,p.y*H,p.sz+.2,0,Math.PI*2);
+    bgx.fillStyle='rgba(255,255,255,'+p.alpha+')';
     bgx.fill();
   });
   floaters.forEach(f => {
-    f.x += f.vx; f.y += f.vy;
-    f.flicker += f.flickerSpeed;
-    const a = f.alpha * (.7 + .3 * Math.sin(f.flicker));
-    if (f.y < -4) { f.y = H + 4; f.x = Math.random() * W; }
-    bgx.beginPath();
-    bgx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-    bgx.fillStyle = 'rgba(255,255,255,' + a + ')';
-    bgx.fill();
+    f.x+=f.vx; f.y+=f.vy; f.flicker+=f.flickerSpeed;
+    const a=f.alpha*(.7+.3*Math.sin(f.flicker));
+    if(f.y<-4){f.y=H+4;f.x=Math.random()*W;}
+    bgx.beginPath(); bgx.arc(f.x,f.y,f.r,0,Math.PI*2);
+    bgx.fillStyle='rgba(255,255,255,'+a+')'; bgx.fill();
   });
-  T += 16;
+  T+=16;
   requestAnimationFrame(drawBg);
 }
 drawBg();
 
-// AUDIO PLAYER
-var audioPlayer = document.getElementById('audioPlayer');
+// ── AUDIO + ENTER OVERLAY ──
+var audio   = document.getElementById('audioPlayer');
+var overlay = document.getElementById('enter-overlay');
+var pbtn    = document.getElementById('pbtn');
 var playing = false;
 
-var overlay = document.getElementById('enter-overlay');
 overlay.addEventListener('click', function() {
-  audioPlayer.volume = 0.75;
-  audioPlayer.play().then(function() {
+  audio.volume = 0.75;
+  audio.play().then(function() {
     playing = true;
     pbtn.innerHTML = '&#9208;';
   }).catch(function(){});
   overlay.classList.add('hidden');
-  setTimeout(function() { overlay.style.display = 'none'; }, 500);
+  setTimeout(function() { overlay.style.display = 'none'; }, 700);
 });
 
-// Play/pause button
-var pbtn = document.getElementById('pbtn');
-pbtn.innerHTML = '&#9654;';
+// ── PLAY / PAUSE ──
 pbtn.addEventListener('click', function() {
-  if (audioPlayer.paused) {
-    audioPlayer.play();
+  if (audio.paused) {
+    audio.play();
     pbtn.innerHTML = '&#9208;';
     playing = true;
   } else {
-    audioPlayer.pause();
+    audio.pause();
     pbtn.innerHTML = '&#9654;';
     playing = false;
   }
 });
 
-// Mute button
-var vmb = document.getElementById('vmb');
+// ── MUTE ──
+var vmb   = document.getElementById('vmb');
 var muted = false;
-var VOL_ON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>';
+var VOL_ON  = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>';
 var VOL_OFF = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>';
 vmb.addEventListener('click', function() {
   muted = !muted;
-  audioPlayer.muted = muted;
+  audio.muted = muted;
   vmb.innerHTML = muted ? VOL_OFF : VOL_ON;
 });
 
-// Progress bar — poll YouTube player
+// ── PROGRESS BAR ──
 var ctEl = document.getElementById('ct');
 var ttEl = document.getElementById('tt');
-var pbf = document.getElementById('pbf');
+var pbf  = document.getElementById('pbf');
 var pbar = document.getElementById('pb');
 
 function fmt(s) {
   s = Math.floor(s || 0);
-  return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+  return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
 }
-
 setInterval(function() {
-  var dur = audioPlayer.duration;
-  var cur = audioPlayer.currentTime;
+  var dur = audio.duration, cur = audio.currentTime;
   if (dur && !isNaN(dur)) {
-    pbf.style.width = (cur / dur * 100) + '%';
+    pbf.style.width = (cur/dur*100) + '%';
     ctEl.textContent = fmt(cur);
     ttEl.textContent = fmt(dur);
   }
 }, 500);
-
 pbar.addEventListener('click', function(e) {
-  var dur = audioPlayer.duration;
+  var dur = audio.duration;
   if (!dur || isNaN(dur)) return;
   var r = pbar.getBoundingClientRect();
-  audioPlayer.currentTime = ((e.clientX - r.left) / r.width) * dur;
+  audio.currentTime = ((e.clientX - r.left) / r.width) * dur;
 });
 
-// VISUALIZER — ambient since we can't tap YT audio
+// ── VISUALIZER ──
 var vis = document.getElementById('vis');
-var vx = vis.getContext('2d');
+var vx  = vis.getContext('2d');
 function rsv() { var r = vis.parentElement.getBoundingClientRect(); vis.width = r.width; vis.height = 32; }
 rsv();
 window.addEventListener('resize', rsv);
-
 function drawVis() {
   requestAnimationFrame(drawVis);
   var W = vis.width, H = vis.height;
-  vx.clearRect(0, 0, W, H);
-  var t = Date.now();
-  var bars = 70;
-  var bw = W / bars - .6;
-  for (var i = 0; i < bars; i++) {
-    var v = (Math.sin(t * .0015 + i * .4) * .5 + .5)
-           * (Math.sin(t * .0008 + i * .15) * .4 + .6)
-           * (playing ? 1 : .15);
-    var bh = Math.max(1, v * H * .88);
-    vx.fillStyle = 'rgba(255,255,255,' + (.15 + v * .55) + ')';
+  vx.clearRect(0,0,W,H);
+  var t = Date.now(), bars = 70, bw = W/bars-.6;
+  for (var i=0;i<bars;i++) {
+    var v = (Math.sin(t*.0015+i*.4)*.5+.5)*(Math.sin(t*.0008+i*.15)*.4+.6)*(playing?1:.15);
+    var bh = Math.max(1,v*H*.88);
+    vx.fillStyle='rgba(255,255,255,'+(.15+v*.55)+')';
     vx.beginPath();
-    vx.roundRect(i * (bw + .6), H - bh, bw, bh, [1.5, 1.5, 0, 0]);
+    vx.roundRect(i*(bw+.6),H-bh,bw,bh,[1.5,1.5,0,0]);
     vx.fill();
   }
 }
