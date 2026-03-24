@@ -200,13 +200,8 @@ body.clicking #cursor-outline { width: 22px; height: 22px; border-color: rgba(25
 <div id="cursor-outline"></div>
 <div id="bg"><canvas id="bgc"></canvas></div>
 
-<!-- Hidden YouTube iframe - autoplay audio -->
-<iframe id="yt"
-  src="https://www.youtube.com/embed/TK__uLTZmb8?autoplay=1&loop=1&playlist=TK__uLTZmb8&controls=0&enablejsapi=1&origin=https://entnomic-cell.github.io"
-  style="position:fixed;width:1px;height:1px;opacity:0.01;pointer-events:none;border:none;top:-9999px;"
-  allow="autoplay; encrypted-media"
-  frameborder="0"
-  allowfullscreen></iframe>
+<!-- YouTube player target (API will populate this div) -->
+<div id="yt" style="position:fixed;width:1px;height:1px;top:-9999px;pointer-events:none;"></div>
 
 <div id="app">
   <div class="card">
@@ -214,7 +209,7 @@ body.clicking #cursor-outline { width: 22px; height: 22px; border-color: rgba(25
     <div class="top">
       <div class="av-wrap">
         <div class="av-ring"></div>
-        <img class="av" src="pfp.png" alt="entnomic">
+        <img class="av" src="source.gif" alt="entnomic">
       </div>
       <div class="name">entnomic</div>
       <div class="handle">
@@ -440,14 +435,41 @@ drawBg();
 var ytReady = false;
 var ytPlayer = null;
 var playing = true;
+var unlocked = false;
+
+function tryPlay() {
+  if (ytPlayer && ytReady && !unlocked) {
+    unlocked = true;
+    ytPlayer.setVolume(75);
+    ytPlayer.playVideo();
+  }
+}
+
+// Unlock audio on first user interaction (required by all modern browsers)
+['click','keydown','touchstart','pointerdown'].forEach(function(ev) {
+  document.addEventListener(ev, function() { tryPlay(); });
+});
 
 window.onYouTubeIframeAPIReady = function() {
   ytPlayer = new YT.Player('yt', {
+    videoId: 'TK__uLTZmb8',
+    playerVars: {
+      autoplay: 1,
+      loop: 1,
+      playlist: 'TK__uLTZmb8',
+      controls: 0,
+      enablejsapi: 1
+    },
     events: {
       onReady: function(e) {
         ytReady = true;
-        e.target.setVolume(75);
-        e.target.playVideo();
+        try { e.target.playVideo(); } catch(err) {}
+        tryPlay();
+      },
+      onStateChange: function(e) {
+        if (e.data === YT.PlayerState.ENDED) {
+          ytPlayer.playVideo();
+        }
       }
     }
   });
