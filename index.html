@@ -60,7 +60,7 @@ body.clicking #cursor-ring { width: 18px; height: 18px; border-color: rgba(255,2
 #bg-img {
   position: absolute; inset: -10%;
   width: 120%; height: 120%;
-  background: url('https://wallpaperaccess.com/full/220730.jpg') center/cover no-repeat;
+  background: url('background.png') center/cover no-repeat;
   animation: breathe 18s ease-in-out infinite;
   will-change: transform;
 }
@@ -92,7 +92,7 @@ body.clicking #cursor-ring { width: 18px; height: 18px; border-color: rgba(255,2
 #enter-bg {
   position: absolute; inset: -10%;
   width: 120%; height: 120%;
-  background: url('https://wallpaperaccess.com/full/220730.jpg') center/cover no-repeat;
+  background: url('background.png') center/cover no-repeat;
   animation: breathe 18s ease-in-out infinite;
   filter: brightness(0.35);
 }
@@ -529,7 +529,7 @@ var pbtn    = document.getElementById('pbtn');
 var playing = false;
 
 overlay.addEventListener('click', function() {
-  audio.volume = 0.75;
+  audio.volume = 0.35;
   audio.play().then(function() {
     playing = true;
     pbtn.innerHTML = '&#9208;';
