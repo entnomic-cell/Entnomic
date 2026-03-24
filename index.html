@@ -461,21 +461,7 @@ drawBg();
 // YOUTUBE PLAYER via API
 var ytReady = false;
 var ytPlayer = null;
-var playing = true;
-var unlocked = false;
-
-function tryPlay() {
-  if (ytPlayer && ytReady && !unlocked) {
-    unlocked = true;
-    ytPlayer.setVolume(75);
-    ytPlayer.playVideo();
-  }
-}
-
-// Unlock audio on first user interaction (required by all modern browsers)
-['click','keydown','touchstart','pointerdown'].forEach(function(ev) {
-  document.addEventListener(ev, function() { tryPlay(); });
-});
+var playing = false; // starts false; set true once actually playing
 
 window.onYouTubeIframeAPIReady = function() {
   ytPlayer = new YT.Player('yt', {
@@ -493,14 +479,17 @@ window.onYouTubeIframeAPIReady = function() {
         ytReady = true;
         e.target.mute();
         e.target.playVideo();
-        // Unmute + set volume after a short delay (autoplay policy workaround)
-        setTimeout(function() {
-          e.target.unMute();
-          e.target.setVolume(75);
-          unlocked = true;
-        }, 800);
       },
       onStateChange: function(e) {
+        if (e.data === YT.PlayerState.PLAYING) {
+          // First time it starts playing muted — unmute it
+          if (!playing) {
+            playing = true;
+            ytPlayer.unMute();
+            ytPlayer.setVolume(75);
+            pbtn.innerHTML = '&#9208;';
+          }
+        }
         if (e.data === YT.PlayerState.ENDED) {
           ytPlayer.playVideo();
         }
@@ -516,13 +505,17 @@ document.head.appendChild(tag);
 
 // Play/pause button
 var pbtn = document.getElementById('pbtn');
+pbtn.innerHTML = '&#9654;'; // starts as play icon since not playing yet
 pbtn.addEventListener('click', function() {
-  if (!ytPlayer) return;
-  if (playing) {
+  if (!ytPlayer || !ytReady) return;
+  var state = ytPlayer.getPlayerState();
+  if (state === YT.PlayerState.PLAYING) {
     ytPlayer.pauseVideo();
     pbtn.innerHTML = '&#9654;';
     playing = false;
   } else {
+    ytPlayer.unMute();
+    ytPlayer.setVolume(75);
     ytPlayer.playVideo();
     pbtn.innerHTML = '&#9208;';
     playing = true;
