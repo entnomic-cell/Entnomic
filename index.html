@@ -62,17 +62,20 @@ body.clicking #cursor-ring { width: 18px; height: 18px; border-color: rgba(255,2
   width: 100%; height: 100%;
   object-fit: cover;
   display: block;
+  z-index: 0;
+  opacity: 0.55;
 }
 
 #bg-overlay {
   position: absolute; inset: 0;
+  z-index: 1;
   background: radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.82) 100%);
   pointer-events: none;
 }
 #bg canvas {
   position: absolute; inset: 0;
   width: 100%; height: 100%; display: block;
-  z-index: 1;
+  z-index: 2;
 }
 
 /* ── ENTER OVERLAY ── */
