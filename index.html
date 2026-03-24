@@ -213,10 +213,50 @@ body.clicking #cursor-ring { width: 18px; height: 18px; border-color: rgba(255,2
 .pbf { height: 100%; width: 0%; background: #fff; border-radius: 99px; pointer-events: none; }
 .pt { font-size: .57rem; color: rgba(255,255,255,0.22); min-width: 27px; }
 .pt:last-child { text-align: right; }
+
+#enter-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: opacity 0.5s ease;
+}
+#enter-overlay.hidden { opacity: 0; pointer-events: none; }
+#enter-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  color: rgba(255,255,255,0.85);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem; font-weight: 400;
+  letter-spacing: 0.15em; text-transform: uppercase;
+}
+#enter-btn svg { opacity: 0.6; }
+#enter-pulse {
+  width: 64px; height: 64px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.3);
+  display: flex; align-items: center; justify-content: center;
+  animation: pulse-ring 2s ease infinite;
+}
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.15); }
+  70% { box-shadow: 0 0 0 16px rgba(255,255,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+}
 </style>
 </head>
 <body>
 
+
+<div id="enter-overlay">
+  <div id="enter-btn">
+    <div id="enter-pulse">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+        <polygon points="5 3 19 12 5 21 5 3"/>
+      </svg>
+    </div>
+    <span>click to enter</span>
+  </div>
+</div>
 <div id="cursor-dot"></div>
 <div id="cursor-h"></div>
 <div id="cursor-v"></div>
@@ -467,40 +507,15 @@ drawBg();
 var audioPlayer = document.getElementById('audioPlayer');
 var playing = false;
 
-function tryAutoplay() {
-  var promise = audioPlayer.play();
-  if (promise !== undefined) {
-    promise.then(function() {
-      playing = true;
-      pbtn.innerHTML = '&#9208;';
-    }).catch(function() {
-      // Autoplay blocked - will start on first click
-      playing = false;
-      pbtn.innerHTML = '&#9654;';
-    });
-  }
-}
-
-// Try autoplay immediately
-window.addEventListener('load', function() {
+var overlay = document.getElementById('enter-overlay');
+overlay.addEventListener('click', function() {
   audioPlayer.volume = 0.75;
-  tryAutoplay();
-});
-
-// Unlock on first user interaction if autoplay was blocked
-var unlocked = false;
-function unlockAudio() {
-  if (!unlocked && !playing) {
-    unlocked = true;
-    audioPlayer.volume = 0.75;
-    audioPlayer.play().then(function() {
-      playing = true;
-      pbtn.innerHTML = '&#9208;';
-    }).catch(function(){});
-  }
-}
-['click','keydown','touchstart'].forEach(function(ev) {
-  document.addEventListener(ev, unlockAudio, { once: true });
+  audioPlayer.play().then(function() {
+    playing = true;
+    pbtn.innerHTML = '&#9208;';
+  }).catch(function(){});
+  overlay.classList.add('hidden');
+  setTimeout(function() { overlay.style.display = 'none'; }, 500);
 });
 
 // Play/pause button
