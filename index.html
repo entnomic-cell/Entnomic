@@ -221,10 +221,15 @@ body.clicking #cursor-ring { width: 18px; height: 18px; border-color: rgba(255,2
 <div id="cursor-h"></div>
 <div id="cursor-v"></div>
 <div id="cursor-ring"></div>
-<div id="bg"><canvas id="bgc"></canvas></div>
+<div id="bg">
+  <video id="bgvid" src="https://r2.guns.lol/0aabada6-664e-4398-840f-bc030d8b90e1.mp4"
+    autoplay loop muted playsinline disablepictureinpicture preload="auto"
+    style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.45;pointer-events:none;">
+  </video>
+  <canvas id="bgc" style="position:relative;z-index:1;"></canvas>
+</div>
 
-<!-- YouTube player target (API will populate this div) -->
-<div id="yt" style="position:fixed;width:1px;height:1px;top:-9999px;pointer-events:none;"></div>
+<audio id="audioPlayer" src="https://r2.guns.lol/5319fb67-26ea-4844-a9bb-a610f25f6aaa.mp3" loop preload="auto" style="display:none;"></audio>
 
 <div id="app">
   <div class="card">
@@ -458,67 +463,58 @@ function drawBg() {
 }
 drawBg();
 
-// YOUTUBE PLAYER via API
-var ytReady = false;
-var ytPlayer = null;
-var playing = false; // starts false; set true once actually playing
+// AUDIO PLAYER
+var audioPlayer = document.getElementById('audioPlayer');
+var playing = false;
 
-window.onYouTubeIframeAPIReady = function() {
-  ytPlayer = new YT.Player('yt', {
-    videoId: 'TK__uLTZmb8',
-    playerVars: {
-      autoplay: 1,
-      loop: 1,
-      playlist: 'TK__uLTZmb8',
-      controls: 0,
-      enablejsapi: 1,
-      mute: 1
-    },
-    events: {
-      onReady: function(e) {
-        ytReady = true;
-        e.target.mute();
-        e.target.playVideo();
-      },
-      onStateChange: function(e) {
-        if (e.data === YT.PlayerState.PLAYING) {
-          // First time it starts playing muted — unmute it
-          if (!playing) {
-            playing = true;
-            ytPlayer.unMute();
-            ytPlayer.setVolume(75);
-            pbtn.innerHTML = '&#9208;';
-          }
-        }
-        if (e.data === YT.PlayerState.ENDED) {
-          ytPlayer.playVideo();
-        }
-      }
-    }
-  });
-};
+function tryAutoplay() {
+  var promise = audioPlayer.play();
+  if (promise !== undefined) {
+    promise.then(function() {
+      playing = true;
+      pbtn.innerHTML = '&#9208;';
+    }).catch(function() {
+      // Autoplay blocked - will start on first click
+      playing = false;
+      pbtn.innerHTML = '&#9654;';
+    });
+  }
+}
 
-// Load YouTube IFrame API
-var tag = document.createElement('script');
-tag.src = 'https://www.youtube.com/iframe_api';
-document.head.appendChild(tag);
+// Try autoplay immediately
+window.addEventListener('load', function() {
+  audioPlayer.volume = 0.75;
+  tryAutoplay();
+});
+
+// Unlock on first user interaction if autoplay was blocked
+var unlocked = false;
+function unlockAudio() {
+  if (!unlocked && !playing) {
+    unlocked = true;
+    audioPlayer.volume = 0.75;
+    audioPlayer.play().then(function() {
+      playing = true;
+      pbtn.innerHTML = '&#9208;';
+    }).catch(function(){});
+  }
+}
+['click','keydown','touchstart'].forEach(function(ev) {
+  document.addEventListener(ev, unlockAudio, { once: true });
+});
 
 // Play/pause button
 var pbtn = document.getElementById('pbtn');
-pbtn.innerHTML = '&#9654;'; // starts as play icon since not playing yet
+pbtn.innerHTML = '&#9654;';
 pbtn.addEventListener('click', function() {
-  if (!ytPlayer || !ytReady) return;
-  var state = ytPlayer.getPlayerState();
-  if (state === YT.PlayerState.PLAYING) {
-    ytPlayer.pauseVideo();
-    pbtn.innerHTML = '&#9654;';
-    playing = false;
-  } else {
-    ytPlayer.unMute();
-    ytPlayer.setVolume(75);
-    ytPlayer.playVideo();
+  if (audioPlayer.paused) {
+    audioPlayer.play();
     pbtn.innerHTML = '&#9208;';
     playing = true;
+  } else {
+    audioPlayer.pause();
+    pbtn.innerHTML = '&#9654;';
+    playing = false;
   }
 });
 
@@ -528,9 +524,8 @@ var muted = false;
 var VOL_ON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>';
 var VOL_OFF = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>';
 vmb.addEventListener('click', function() {
-  if (!ytPlayer) return;
   muted = !muted;
-  muted ? ytPlayer.mute() : ytPlayer.unMute();
+  audioPlayer.muted = muted;
   vmb.innerHTML = muted ? VOL_OFF : VOL_ON;
 });
 
@@ -546,10 +541,9 @@ function fmt(s) {
 }
 
 setInterval(function() {
-  if (!ytPlayer || !ytPlayer.getDuration) return;
-  var dur = ytPlayer.getDuration();
-  var cur = ytPlayer.getCurrentTime();
-  if (dur) {
+  var dur = audioPlayer.duration;
+  var cur = audioPlayer.currentTime;
+  if (dur && !isNaN(dur)) {
     pbf.style.width = (cur / dur * 100) + '%';
     ctEl.textContent = fmt(cur);
     ttEl.textContent = fmt(dur);
@@ -557,9 +551,10 @@ setInterval(function() {
 }, 500);
 
 pbar.addEventListener('click', function(e) {
-  if (!ytPlayer || !ytPlayer.getDuration) return;
+  var dur = audioPlayer.duration;
+  if (!dur || isNaN(dur)) return;
   var r = pbar.getBoundingClientRect();
-  ytPlayer.seekTo(((e.clientX - r.left) / r.width) * ytPlayer.getDuration(), true);
+  audioPlayer.currentTime = ((e.clientX - r.left) / r.width) * dur;
 });
 
 // VISUALIZER — ambient since we can't tap YT audio
